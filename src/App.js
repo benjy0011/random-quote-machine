@@ -8,17 +8,22 @@ function App() {
   const [quote, setQuote] = useState("");
   const [author, setAuthor] = useState("");
   const [colorCode, setColorCode] = useState("#282c34");
+  const [isLoading, setIsLoading] = useState(false);
+  const [fade, setFade] = useState(false);
 
   const getQuoteData = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch(api);
       if (!response.ok) {
         throw new Error(`${response.status}`)
       }
       const data = await response.json();
+      setIsLoading(false);
       return data;
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
       return null;
     }
   }
@@ -27,9 +32,14 @@ function App() {
     const quoteData = await getQuoteData(api);
 
     if (quoteData) {
-      setQuote(quoteData.quote);
-      setAuthor(quoteData.author);
-      setColorCode(COLORS[quoteData.id%20])  
+      setFade(true);
+      setColorCode(COLORS[quoteData.id%20]);
+      
+      setTimeout(() => {
+        setQuote(quoteData.quote);
+        setAuthor(quoteData.author);
+        setFade(false);
+      }, 400) 
     }    
   };
 
@@ -50,18 +60,25 @@ function App() {
         }
       >
         <div id="quote-box">
-          <p id="text">"{quote}"</p>
+          <p id="text" style={{ opacity: fade ? 0 : 1 }}><i class="ri-double-quotes-l"></i> {quote} </p>
 
-          <p id="author"> - {author}</p>
+          <p id="author" style={{ opacity: fade ? 0 : 1 }}> - {author}</p>
 
-          <button id="new-quote" onClick={() => {
-            getNewQuoteAndUpdate()
-          }}>
-            Change Quote
-          </button>
+          {
+            !isLoading 
+            ? <button id="new-quote" style={{ backgroundColor: colorCode, cursor: "pointer" }} onClick={() => {
+              getNewQuoteAndUpdate();
+            }}>
+              New Quote
+            </button>
+            : <button id="new-quote" style={{ backgroundColor: colorCode, cursor: "progress" }} >
+              Loading
+            </button> 
+          }
 
-          <a id="tweet-quote" href={`https://www.twitter.com/intent/tweet?text=%22${quote}%22%20-%20${author}%20%0A%0A%23quotes`}>Tweet</a>
+          <a id="tweet-quote" style={{ backgroundColor: colorCode }} href={`https://www.twitter.com/intent/tweet?text=%22${quote}%22%20-%20${author}%20%0A%0A%23quotes`}><i class="ri-twitter-x-fill"></i></a>
         </div>
+        <p style={{ color: "white", fontSize: "15px"}}>by Benjy</p>
       </header>
     </div>
   );
