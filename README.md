@@ -1,6 +1,9 @@
-## This is a random quote machine for freeCodeCamp.com's Front End Library Certification.
+# Random-Quote-Machine
 
-This also my first React App.
+This is a random quote machine for freeCodeCamp.com's Front End Library Certification. This also my first React App.
+
+API:
+https://dummyjson.com/quotes/random
 
 Try out:
 https://benjy0011.github.io/random-quote-machine/
