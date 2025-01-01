@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  box-sizing: border-box;
 
   .App-header {
     background-color: #282c34;
@@ -9,7 +10,28 @@
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
-    color: white;
+    color: #282c34;
+  }
+
+  #quote-box {
+    padding: 20px;
+    width: max(50vw, 400px);
+    background-color: white;
+    border-radius: 20px;
+
+    #author {
+      text-align: end;
+    }
+
+    #tweet-quote {
+      float: inline-start;
+      padding-left: 2vw;
+    }
+
+    #new-quote {
+      float: inline-end;
+      margin-right: 1.5vw;
+    }
   }
 }
 

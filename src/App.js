@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import './App.scss';
+import COLORS from './colors.js'
 
+const api = "https://dummyjson.com/quotes/random";
 
 function App() {
   const [quote, setQuote] = useState("");
   const [author, setAuthor] = useState("");
-
-  const api = "https://animechan.io/api/v1/quotes/random";
+  const [colorCode, setColorCode] = useState("#282c34");
 
   const getQuoteData = async () => {
     try {
@@ -22,55 +23,45 @@ function App() {
     }
   }
   
-  const getQuoteAndAuthor = (quoteData) => {
-    if (!quoteData) {
-      return {
-        quoteContent: null,
-        quoteAuthor: null,
-      };
-    }
-
-    const quoteContent = quoteData.content;
-    const quoteAuthor = `${quoteData.character.name} (${quoteData.anime.name})`;
-  
-    return {
-      quoteContent,
-      quoteAuthor,
-    };
-  }
-  
   const getNewQuoteAndUpdate = async () => {
     const quoteData = await getQuoteData(api);
 
     if (quoteData) {
-      const { quoteContent, quoteAuthor } = getQuoteAndAuthor(quoteData);
-  
-      setQuote(quoteContent);
-      setAuthor(quoteAuthor);  
+      setQuote(quoteData.quote);
+      setAuthor(quoteData.author);
+      setColorCode(COLORS[quoteData.id%20])  
     }    
   };
 
   // Fetch the initial quote when the component loads
   useEffect(() => {
     getNewQuoteAndUpdate();
-  });
+  }, []);
   
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          "{quote}"
-        </p>
+      <header 
+        className="App-header" 
+        style={
+          {
+            backgroundColor: colorCode,
+            color: colorCode
+          }
+        }
+      >
+        <div id="quote-box">
+          <p id="text">"{quote}"</p>
 
-        <p> 
-          - {author}
-        </p>
+          <p id="author"> - {author}</p>
 
-        <button onClick={() => {
-          getNewQuoteAndUpdate()
-        }}>
-          Change Quote
-        </button>
+          <button id="new-quote" onClick={() => {
+            getNewQuoteAndUpdate()
+          }}>
+            Change Quote
+          </button>
+
+          <a id="tweet-quote" href={`https://www.twitter.com/intent/tweet?text=%22${quote}%22%20-%20${author}%20%0A%0A%23quotes`}>Tweet</a>
+        </div>
       </header>
     </div>
   );
